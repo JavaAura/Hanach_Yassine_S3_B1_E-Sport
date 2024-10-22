@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Entity Manager Factory -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="esportPU"/>
+    </bean>
+
+    <!-- Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- Enable Transaction Management -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- DAOs -->
+    <bean id="joueurDao" class="org.esport.dao.impl.JoueurDaoImpl"/>
+    <bean id="equipeDao" class="org.esport.dao.impl.EquipeDaoImpl"/>
+    <bean id="tournoiDao" class="org.esport.dao.impl.TournoiDaoImpl"/>
+    <bean id="tournoiDaoExtension" class="org.esport.dao.impl.TournoiDaoExtension">
+        <constructor-arg ref="tournoiDao"/>
+    </bean>
+    <bean id="jeuDao" class="org.esport.dao.impl.JeuDaoImpl"/>
+
+    <!-- Services -->
+    <bean id="joueurService" class="org.esport.service.impl.JoueurServiceImpl">
+        <constructor-arg ref="joueurDao"/>
+    </bean>
+    <bean id="equipeService" class="org.esport.service.impl.EquipeServiceImpl">
+        <constructor-arg ref="equipeDao"/>
+        <constructor-arg ref="joueurDao"/>
+    </bean>
+    <bean id="tournoiService" class="org.esport.service.impl.TournoiServiceImpl">
+        <constructor-arg ref="tournoiDaoExtension"/>
+        <constructor-arg ref="equipeDao"/>
+    </bean>
+    <bean id="jeuService" class="org.esport.service.impl.JeuServiceImpl">
+        <constructor-arg ref="jeuDao"/>
+    </bean>
+
+    <!-- Console Menu -->
+    <bean id="mainMenu" class="org.esport.presentation.menu.MainMenu">
+        <property name="joueurService" ref="joueurService"/>
+        <property name="equipeService" ref="equipeService"/>
+        <property name="tournoiService" ref="tournoiService"/>
+        <property name="jeuService" ref="jeuService"/>
+    </bean>
+
+    <!-- Utilities -->
+    <bean id="validationUtil" class="org.esport.util.ValidationUtil"/>
+    <bean id="dateTimeUtil" class="org.esport.util.DateTimeUtil"/>
+    <bean id="consoleLogger" class="org.esport.util.ConsoleLogger"/>
+
+    <!-- Console -->
+    <bean id="console" class="org.esport.presentation.Console"/>
+
+</beans>

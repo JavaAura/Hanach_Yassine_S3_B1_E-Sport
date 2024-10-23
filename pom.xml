@@ -104,7 +104,6 @@
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
         </dependency>
-
         <!-- Mockito for testing -->
         <dependency>
             <groupId>org.mockito</groupId>

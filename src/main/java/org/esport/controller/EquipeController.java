@@ -61,4 +61,9 @@ public class EquipeController {
         LOGGER.info("Tentative de retrait du joueur {} de l'équipe {}", joueurId, equipeId);
         equipeService.retirerJoueur(equipeId, joueurId);
     }
+
+    public List<Equipe> obtenirEquipesParTournoi(Long tournoiId) {
+        LOGGER.info("Tentative d'obtention des équipes pour le tournoi avec l'ID: {}", tournoiId);
+        return equipeService.obtenirEquipesParTournoi(tournoiId);
+    }
 }

@@ -18,6 +18,6 @@ public class App {
         String h2ConsoleUrl = h2WebServer.getURL();
         LOGGER.info("H2 Console URL: {}", h2ConsoleUrl);
 
-        mainMenu.start();
+        mainMenu.afficherMenuPrincipal();
     }
 }

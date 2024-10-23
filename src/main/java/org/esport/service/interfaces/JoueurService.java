@@ -16,4 +16,8 @@ public interface JoueurService {
     List<Joueur> obtenirTousJoueurs();
 
     List<Joueur> obtenirJoueursParEquipe(Long equipeId);
+
+    boolean existeParPseudo(String pseudo);
+
+    Optional<Joueur> trouverParPseudo(String pseudo);
 }

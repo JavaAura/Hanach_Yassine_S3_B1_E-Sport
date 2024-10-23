@@ -57,4 +57,14 @@ public class JoueurController {
         LOGGER.info("Tentative d'obtention des joueurs pour l'équipe avec l'ID: {}", equipeId);
         return joueurService.obtenirJoueursParEquipe(equipeId);
     }
+
+    public boolean existeJoueurParPseudo(String pseudo) {
+        LOGGER.info("Vérification de l'existence d'un joueur avec le pseudo: {}", pseudo);
+        return joueurService.existeParPseudo(pseudo);
+    }
+
+    public Optional<Joueur> obtenirJoueurParPseudo(String pseudo) {
+        LOGGER.info("Tentative d'obtention du joueur avec le pseudo: {}", pseudo);
+        return joueurService.trouverParPseudo(pseudo);
+    }
 }

@@ -54,4 +54,16 @@ public class JoueurServiceImpl implements JoueurService {
         LOGGER.info("Récupération des joueurs pour l'équipe avec l'ID: {}", equipeId);
         return joueurDao.trouverParEquipe(equipeId);
     }
+
+    @Override
+    public boolean existeParPseudo(String pseudo) {
+        LOGGER.info("Vérification de l'existence d'un joueur avec le pseudo: {}", pseudo);
+        return joueurDao.existeParPseudo(pseudo);
+    }
+
+    @Override
+    public Optional<Joueur> trouverParPseudo(String pseudo) {
+        LOGGER.info("Recherche d'un joueur avec le pseudo: {}", pseudo);
+        return joueurDao.trouverParPseudo(pseudo);
+    }
 }

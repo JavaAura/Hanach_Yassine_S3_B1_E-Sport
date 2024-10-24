@@ -16,36 +16,25 @@ import java.util.Scanner;
 
 public class MainMenu {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
-    private JoueurController joueurController;
-    private EquipeController equipeController;
-    private TournoiController tournoiController;
-    private JeuController jeuController;
-    private ConsoleLogger consoleLogger;
-    private Scanner scanner;
+    private final JoueurController joueurController;
+    private final EquipeController equipeController;
+    private final TournoiController tournoiController;
+    private final JeuController jeuController;
+    private final ConsoleLogger consoleLogger;
+    private final Scanner scanner;
 
-    // Setters for dependency injection
-    public void setJoueurController(JoueurController joueurController) {
+    public MainMenu(JoueurController joueurController, EquipeController equipeController,
+            TournoiController tournoiController, JeuController jeuController,
+            ConsoleLogger consoleLogger) {
         this.joueurController = joueurController;
-    }
-
-    public void setEquipeController(EquipeController equipeController) {
         this.equipeController = equipeController;
-    }
-
-    public void setTournoiController(TournoiController tournoiController) {
         this.tournoiController = tournoiController;
-    }
-
-    public void setJeuController(JeuController jeuController) {
         this.jeuController = jeuController;
-    }
-
-    public void setConsoleLogger(ConsoleLogger consoleLogger) {
         this.consoleLogger = consoleLogger;
+        this.scanner = new Scanner(System.in);
     }
 
     public void afficherMenuPrincipal() {
-        scanner = new Scanner(System.in);
         boolean continuer = true;
         while (continuer) {
             consoleLogger.afficherMessage("Menu principal:");
@@ -81,21 +70,5 @@ public class MainMenu {
             }
         }
         scanner.close();
-    }
-
-    public void setJoueurService(JoueurService joueurService) {
-        this.joueurController = new JoueurController(joueurService);
-    }
-
-    public void setEquipeService(EquipeService equipeService) {
-        this.equipeController = new EquipeController(equipeService);
-    }
-
-    public void setTournoiService(TournoiService tournoiService) {
-        this.tournoiController = new TournoiController(tournoiService);
-    }
-
-    public void setJeuService(JeuService jeuService) {
-        this.jeuController = new JeuController(jeuService);
     }
 }

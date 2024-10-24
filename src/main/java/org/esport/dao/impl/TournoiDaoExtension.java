@@ -73,13 +73,10 @@ public class TournoiDaoExtension implements TournoiDao {
 
             int dureeEstimee = (nombreEquipes * dureeMoyenneMatch * difficulteJeu) + tempsPauseEntreMatchs
                     + tempsCeremonie;
-            LOGGER.info("Durée estimée calculée (avancée) pour le tournoi avec l'ID {}: {} minutes", tournoiId,
-                    dureeEstimee);
+            tournoi.setDureeEstimee(dureeEstimee);
+            entityManager.merge(tournoi);
             return dureeEstimee;
-        } else {
-            LOGGER.warn("Tentative de calcul de la durée estimée (avancée) pour un tournoi inexistant avec l'ID: {}",
-                    tournoiId);
-            return 0;
         }
+        return 0;
     }
 }

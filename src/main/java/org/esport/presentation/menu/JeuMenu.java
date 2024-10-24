@@ -63,22 +63,116 @@ public class JeuMenu {
     }
 
     private void creerJeu() {
-        // Implement game creation logic using jeuController
+        consoleLogger.afficherMessage("Création d'un nouveau jeu");
+        consoleLogger.afficherMessage("Entrez le nom du jeu:");
+        String nom = scanner.nextLine();
+        consoleLogger.afficherMessage("Entrez la difficulté du jeu (1-10):");
+        int difficulte = scanner.nextInt();
+        consoleLogger.afficherMessage("Entrez la durée moyenne d'un match (en minutes):");
+        int dureeMoyenneMatch = scanner.nextInt();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        Jeu nouveauJeu = jeuController.creerJeu(nom, difficulte, dureeMoyenneMatch);
+        if (nouveauJeu != null) {
+            consoleLogger.afficherMessage("Jeu créé avec succès. ID: " + nouveauJeu.getId());
+        } else {
+            consoleLogger.afficherErreur("Erreur lors de la création du jeu.");
+        }
     }
 
     private void modifierJeu() {
-        // Implement game modification logic using jeuController
+        consoleLogger.afficherMessage("Modification d'un jeu");
+        consoleLogger.afficherMessage("Entrez l'ID du jeu à modifier:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        Optional<Jeu> jeuOptional = jeuController.obtenirJeu(id);
+        if (jeuOptional.isPresent()) {
+            Jeu jeu = jeuOptional.get();
+            consoleLogger.afficherMessage("Jeu trouvé: " + jeu.getNom());
+            consoleLogger.afficherMessage("Entrez le nouveau nom du jeu (ou appuyez sur Entrée pour garder l'ancien):");
+            String nouveauNom = scanner.nextLine();
+            if (nouveauNom.isEmpty()) {
+                nouveauNom = jeu.getNom();
+            }
+
+            consoleLogger
+                    .afficherMessage("Entrez la nouvelle difficulté du jeu (1-10) (ou -1 pour garder l'ancienne):");
+            int nouvelleDifficulte = scanner.nextInt();
+            if (nouvelleDifficulte == -1) {
+                nouvelleDifficulte = jeu.getDifficulte();
+            }
+
+            consoleLogger.afficherMessage(
+                    "Entrez la nouvelle durée moyenne d'un match (en minutes) (ou -1 pour garder l'ancienne):");
+            int nouvelleDureeMoyenneMatch = scanner.nextInt();
+            if (nouvelleDureeMoyenneMatch == -1) {
+                nouvelleDureeMoyenneMatch = jeu.getDureeMoyenneMatch();
+            }
+            scanner.nextLine(); // Consommer la nouvelle ligne
+
+            Jeu jeuModifie = jeuController.modifierJeu(id, nouveauNom, nouvelleDifficulte, nouvelleDureeMoyenneMatch);
+            if (jeuModifie != null) {
+                consoleLogger.afficherMessage("Jeu modifié avec succès.");
+            } else {
+                consoleLogger.afficherErreur("Erreur lors de la modification du jeu.");
+            }
+        } else {
+            consoleLogger.afficherErreur("Jeu non trouvé.");
+        }
     }
 
     private void supprimerJeu() {
-        // Implement game deletion logic using jeuController
+        consoleLogger.afficherMessage("Suppression d'un jeu");
+        consoleLogger.afficherMessage("Entrez l'ID du jeu à supprimer:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        Optional<Jeu> jeuOptional = jeuController.obtenirJeu(id);
+        if (jeuOptional.isPresent()) {
+            consoleLogger.afficherMessage(
+                    "Êtes-vous sûr de vouloir supprimer le jeu " + jeuOptional.get().getNom() + "? (O/N)");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("O")) {
+                jeuController.supprimerJeu(id);
+                consoleLogger.afficherMessage("Jeu supprimé avec succès.");
+            } else {
+                consoleLogger.afficherMessage("Suppression annulée.");
+            }
+        } else {
+            consoleLogger.afficherErreur("Jeu non trouvé.");
+        }
     }
 
     private void afficherJeu() {
-        // Implement single game display logic using jeuController
+        consoleLogger.afficherMessage("Affichage d'un jeu");
+        consoleLogger.afficherMessage("Entrez l'ID du jeu à afficher:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        Optional<Jeu> jeuOptional = jeuController.obtenirJeu(id);
+        if (jeuOptional.isPresent()) {
+            Jeu jeu = jeuOptional.get();
+            consoleLogger.afficherMessage("Détails du jeu:");
+            consoleLogger.afficherMessage("ID: " + jeu.getId());
+            consoleLogger.afficherMessage("Nom: " + jeu.getNom());
+            consoleLogger.afficherMessage("Difficulté: " + jeu.getDifficulte());
+            consoleLogger.afficherMessage("Durée moyenne d'un match: " + jeu.getDureeMoyenneMatch() + " minutes");
+        } else {
+            consoleLogger.afficherErreur("Jeu non trouvé.");
+        }
     }
 
     private void afficherTousJeux() {
-        // Implement all games display logic using jeuController
+        consoleLogger.afficherMessage("Liste de tous les jeux:");
+        List<Jeu> jeux = jeuController.obtenirTousJeux();
+        if (!jeux.isEmpty()) {
+            for (Jeu jeu : jeux) {
+                consoleLogger.afficherMessage("ID: " + jeu.getId() + ", Nom: " + jeu.getNom() + ", Difficulté: "
+                        + jeu.getDifficulte() + ", Durée moyenne: " + jeu.getDureeMoyenneMatch() + " minutes");
+            }
+        } else {
+            consoleLogger.afficherMessage("Aucun jeu trouvé.");
+        }
     }
 }

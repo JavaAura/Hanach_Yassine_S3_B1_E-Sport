@@ -4,6 +4,7 @@ import org.esport.model.Tournoi;
 import org.esport.model.Equipe;
 import java.util.List;
 import java.util.Optional;
+import org.esport.model.enums.TournoiStatus;
 
 public interface TournoiDao {
     Tournoi creer(Tournoi tournoi);
@@ -21,4 +22,8 @@ public interface TournoiDao {
     void retirerEquipe(Long tournoiId, Equipe equipe);
 
     int calculerdureeEstimeeTournoi(Long tournoiId);
+
+    Optional<Tournoi> trouverParIdAvecEquipes(Long id);
+
+    void modifierStatut(Long tournoiId, TournoiStatus nouveauStatut);
 }

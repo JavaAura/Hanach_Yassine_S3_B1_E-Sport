@@ -4,6 +4,7 @@ import org.esport.dao.interfaces.TournoiDao;
 import org.esport.model.Tournoi;
 import org.esport.model.Equipe;
 import org.esport.model.Jeu;
+import org.esport.model.enums.TournoiStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,11 @@ public class TournoiDaoExtension implements TournoiDao {
     }
 
     @Override
+    public Optional<Tournoi> trouverParIdAvecEquipes(Long id) {
+        return tournoiDaoImpl.trouverParIdAvecEquipes(id);
+    }
+
+    @Override
     public int calculerdureeEstimeeTournoi(Long tournoiId) {
         Tournoi tournoi = entityManager.find(Tournoi.class, tournoiId);
         if (tournoi != null) {
@@ -78,5 +84,10 @@ public class TournoiDaoExtension implements TournoiDao {
             return dureeEstimee;
         }
         return 0;
+    }
+
+    @Override
+    public void modifierStatut(Long tournoiId, TournoiStatus nouveauStatut) {
+        tournoiDaoImpl.modifierStatut(tournoiId, nouveauStatut);
     }
 }

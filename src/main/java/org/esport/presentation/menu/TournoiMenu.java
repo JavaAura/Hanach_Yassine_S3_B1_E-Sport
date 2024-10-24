@@ -9,7 +9,7 @@ import org.esport.model.Jeu;
 import org.esport.util.ConsoleLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.esport.model.enums.TournoiStatus;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -34,22 +34,22 @@ public class TournoiMenu {
     }
 
     public void afficherMenu() {
-        boolean continuer = true;
-        while (continuer) {
-            consoleLogger.afficherMessage("Menu Tournoi:");
-            consoleLogger.afficherMessage("1. Créer un tournoi");
-            consoleLogger.afficherMessage("2. Modifier un tournoi");
-            consoleLogger.afficherMessage("3. Supprimer un tournoi");
-            consoleLogger.afficherMessage("4. Afficher un tournoi");
-            consoleLogger.afficherMessage("5. Afficher tous les tournois");
-            consoleLogger.afficherMessage("6. Ajouter une équipe à un tournoi");
-            consoleLogger.afficherMessage("7. Retirer une équipe d'un tournoi");
-            consoleLogger.afficherMessage("8. Calculer la durée estimée d'un tournoi");
-            consoleLogger.afficherMessage("0. Retour au menu principal");
-            consoleLogger.afficherMessage("Choisissez une option:");
-
-            int choix = scanner.nextInt();
-            scanner.nextLine(); // Consommer la nouvelle ligne
+        int choix;
+        do {
+            System.out.println("\n--- Menu Tournoi ---");
+            System.out.println("1. Créer un tournoi");
+            System.out.println("2. Modifier un tournoi");
+            System.out.println("3. Supprimer un tournoi");
+            System.out.println("4. Afficher un tournoi");
+            System.out.println("5. Afficher tous les tournois");
+            System.out.println("6. Ajouter une équipe à un tournoi");
+            System.out.println("7. Retirer une équipe d'un tournoi");
+            System.out.println("8. Calculer la durée estimée d'un tournoi");
+            System.out.println("9. Modifier le statut d'un tournoi");
+            System.out.println("0. Retour au menu principal");
+            System.out.print("Votre choix : ");
+            choix = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
 
             switch (choix) {
                 case 1:
@@ -76,13 +76,16 @@ public class TournoiMenu {
                 case 8:
                     calculerDureeEstimeeTournoi();
                     break;
+                case 9:
+                    modifierStatutTournoi();
+                    break;
                 case 0:
-                    continuer = false;
+                    System.out.println("Retour au menu principal...");
                     break;
                 default:
-                    consoleLogger.afficherErreur("Option invalide. Veuillez réessayer.");
+                    System.out.println("Choix invalide. Veuillez réessayer.");
             }
-        }
+        } while (choix != 0);
     }
 
     private void creerTournoi() {
@@ -284,5 +287,41 @@ public class TournoiMenu {
         } else {
             consoleLogger.afficherErreur("Impossible de calculer la durée estimée du tournoi.");
         }
+    }
+
+    private void modifierStatutTournoi() {
+        System.out.println("Entrez l'ID du tournoi :");
+        Long tournoiId = scanner.nextLong();
+        scanner.nextLine(); // Consume newline
+
+        System.out.println("Choisissez le nouveau statut :");
+        System.out.println("1. PLANIFIE");
+        System.out.println("2. EN_COURS");
+        System.out.println("3. TERMINE");
+        System.out.println("4. ANNULE");
+        int choix = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        TournoiStatus nouveauStatut;
+        switch (choix) {
+            case 1:
+                nouveauStatut = TournoiStatus.PLANIFIE;
+                break;
+            case 2:
+                nouveauStatut = TournoiStatus.EN_COURS;
+                break;
+            case 3:
+                nouveauStatut = TournoiStatus.TERMINE;
+                break;
+            case 4:
+                nouveauStatut = TournoiStatus.ANNULE;
+                break;
+            default:
+                System.out.println("Choix invalide. Opération annulée.");
+                return;
+        }
+
+        tournoiController.modifierStatutTournoi(tournoiId, nouveauStatut);
+        System.out.println("Statut du tournoi modifié avec succès.");
     }
 }

@@ -4,6 +4,7 @@ import org.esport.dao.interfaces.TournoiDao;
 import org.esport.model.Tournoi;
 import org.esport.model.Equipe;
 import org.esport.model.Jeu;
+import org.esport.model.enums.TournoiStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,5 +97,26 @@ public class TournoiDaoImpl implements TournoiDao {
             return dureeEstimee;
         }
         return 0;
+    }
+
+    @Override
+    public Optional<Tournoi> trouverParIdAvecEquipes(Long id) {
+        TypedQuery<Tournoi> query = entityManager.createQuery(
+                "SELECT DISTINCT t FROM Tournoi t LEFT JOIN FETCH t.equipes WHERE t.id = :id", Tournoi.class);
+        query.setParameter("id", id);
+        List<Tournoi> results = query.getResultList();
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+    @Override
+    public void modifierStatut(Long tournoiId, TournoiStatus nouveauStatut) {
+        Tournoi tournoi = entityManager.find(Tournoi.class, tournoiId);
+        if (tournoi != null) {
+            tournoi.setStatut(nouveauStatut);
+            entityManager.merge(tournoi);
+            LOGGER.info("Statut du tournoi avec l'ID {} modifié à {}", tournoiId, nouveauStatut);
+        } else {
+            LOGGER.warn("Tentative de modification du statut d'un tournoi inexistant avec l'ID: {}", tournoiId);
+        }
     }
 }

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-
+import org.esport.model.enums.TournoiStatus;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -108,5 +108,10 @@ public class TournoiController {
         return (tournoi.getDureeMoyenneMatch() * nombreTotalMatchs) +
                 (tournoi.getTempsPauseEntreMatchs() * (nombreTotalMatchs - 1)) +
                 tournoi.getTempsCeremonie();
+    }
+
+    public void modifierStatutTournoi(Long tournoiId, TournoiStatus nouveauStatut) {
+        LOGGER.info("Tentative de modification du statut du tournoi {} à {}", tournoiId, nouveauStatut);
+        tournoiService.modifierStatutTournoi(tournoiId, nouveauStatut);
     }
 }

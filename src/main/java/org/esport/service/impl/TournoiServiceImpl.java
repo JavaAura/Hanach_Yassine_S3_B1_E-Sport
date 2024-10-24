@@ -8,6 +8,7 @@ import org.esport.service.interfaces.TournoiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.esport.model.enums.TournoiStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +45,10 @@ public class TournoiServiceImpl implements TournoiService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Tournoi> obtenirTournoi(Long id) {
         LOGGER.info("Recherche du tournoi avec l'ID: {}", id);
-        return tournoiDao.trouverParId(id);
+        return tournoiDao.trouverParIdAvecEquipes(id);
     }
 
     @Override
@@ -81,5 +83,12 @@ public class TournoiServiceImpl implements TournoiService {
     public int calculerdureeEstimeeTournoi(Long tournoiId) {
         LOGGER.info("Calcul de la durée estimée pour le tournoi avec l'ID: {}", tournoiId);
         return tournoiDao.calculerdureeEstimeeTournoi(tournoiId);
+    }
+
+    @Override
+    @Transactional
+    public void modifierStatutTournoi(Long tournoiId, TournoiStatus nouveauStatut) {
+        LOGGER.info("Modification du statut du tournoi {} à {}", tournoiId, nouveauStatut);
+        tournoiDao.modifierStatut(tournoiId, nouveauStatut);
     }
 }

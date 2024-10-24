@@ -3,6 +3,7 @@ package org.esport.presentation.menu;
 import org.esport.controller.EquipeController;
 import org.esport.controller.JoueurController;
 import org.esport.model.Equipe;
+import org.esport.model.Joueur;
 import org.esport.util.ConsoleLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,32 +76,100 @@ public class EquipeMenu {
     }
 
     private void creerEquipe() {
-        // Implement team creation logic using equipeController
+        consoleLogger.afficherMessage("Création d'une nouvelle équipe");
+        consoleLogger.afficherMessage("Entrez le nom de l'équipe:");
+        String nom = scanner.nextLine();
+
+        Equipe equipeCreee = equipeController.creerEquipe(nom);
+
+        if (equipeCreee != null) {
+            consoleLogger.afficherMessage("Équipe créée avec succès. ID: " + equipeCreee.getId());
+        } else {
+            consoleLogger.afficherErreur("Erreur lors de la création de l'équipe.");
+        }
     }
 
     private void modifierEquipe() {
-        // Implement team modification logic using equipeController
+        consoleLogger.afficherMessage("Modification d'une équipe");
+        consoleLogger.afficherMessage("Entrez l'ID de l'équipe à modifier:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+        consoleLogger.afficherMessage("Entrez le nouveau nom de l'équipe:");
+        String nouveauNom = scanner.nextLine();
+
+        Equipe equipeModifiee = equipeController.modifierEquipe(id, nouveauNom);
+        if (equipeModifiee != null) {
+            consoleLogger.afficherMessage("Équipe modifiée avec succès.");
+        } else {
+            consoleLogger.afficherErreur("Erreur lors de la modification de l'équipe.");
+        }
     }
 
     private void supprimerEquipe() {
-        // Implement team deletion logic using equipeController
+        consoleLogger.afficherMessage("Suppression d'une équipe");
+        consoleLogger.afficherMessage("Entrez l'ID de l'équipe à supprimer:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        equipeController.supprimerEquipe(id);
+        consoleLogger.afficherMessage("Équipe supprimée avec succès (si elle existait).");
     }
 
     private void afficherEquipe() {
-        // Implement single team display logic using equipeController
+        consoleLogger.afficherMessage("Affichage d'une équipe");
+        consoleLogger.afficherMessage("Entrez l'ID de l'équipe à afficher:");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        Optional<Equipe> equipeOptionnelle = equipeController.obtenirEquipe(id);
+        if (equipeOptionnelle.isPresent()) {
+            Equipe equipe = equipeOptionnelle.get();
+            consoleLogger.afficherMessage("ID: " + equipe.getId());
+            consoleLogger.afficherMessage("Nom: " + equipe.getNom());
+            consoleLogger.afficherMessage("Classement: " + equipe.getClassement());
+            consoleLogger.afficherMessage("Joueurs:");
+            for (Joueur joueur : equipe.getJoueurs()) {
+                consoleLogger.afficherMessage("  - " + joueur.getPseudo());
+            }
+        } else {
+            consoleLogger.afficherErreur("Équipe non trouvée.");
+        }
     }
 
     private void afficherToutesEquipes() {
-        // Implement all teams display logic using equipeController
+        consoleLogger.afficherMessage("Liste de toutes les équipes:");
+        List<Equipe> equipes = equipeController.obtenirToutesEquipes();
+        if (!equipes.isEmpty()) {
+            for (Equipe equipe : equipes) {
+                consoleLogger.afficherMessage("ID: " + equipe.getId() + ", Nom: " + equipe.getNom() + ", Classement: "
+                        + equipe.getClassement());
+            }
+        } else {
+            consoleLogger.afficherMessage("Aucune équipe trouvée.");
+        }
     }
 
     private void ajouterJoueurAEquipe() {
-        // Implement add player to team logic using equipeController and
-        // joueurController
+        consoleLogger.afficherMessage("Ajout d'un joueur à une équipe");
+        consoleLogger.afficherMessage("Entrez l'ID de l'équipe:");
+        Long equipeId = scanner.nextLong();
+        consoleLogger.afficherMessage("Entrez l'ID du joueur à ajouter:");
+        Long joueurId = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        equipeController.ajouterJoueurAEquipe(equipeId, joueurId);
+        consoleLogger.afficherMessage("Joueur ajouté à l'équipe avec succès (si les deux existent).");
     }
 
     private void retirerJoueurDeEquipe() {
-        // Implement remove player from team logic using equipeController and
-        // joueurController
+        consoleLogger.afficherMessage("Retrait d'un joueur d'une équipe");
+        consoleLogger.afficherMessage("Entrez l'ID de l'équipe:");
+        Long equipeId = scanner.nextLong();
+        consoleLogger.afficherMessage("Entrez l'ID du joueur à retirer:");
+        Long joueurId = scanner.nextLong();
+        scanner.nextLine(); // Consommer la nouvelle ligne
+
+        equipeController.retirerJoueurDeEquipe(equipeId, joueurId);
+        consoleLogger.afficherMessage("Joueur retiré de l'équipe avec succès (si les deux existent).");
     }
 }

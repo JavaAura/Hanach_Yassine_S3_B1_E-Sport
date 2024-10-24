@@ -5,10 +5,12 @@ import org.esport.model.Joueur;
 import org.esport.service.interfaces.JoueurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class JoueurServiceImpl implements JoueurService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JoueurServiceImpl.class);

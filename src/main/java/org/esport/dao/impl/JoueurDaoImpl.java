@@ -20,6 +20,10 @@ public class JoueurDaoImpl implements JoueurDao {
 
     @Override
     public Joueur inscrire(Joueur joueur) {
+        if (entityManager == null) {
+            LOGGER.error("EntityManager is null");
+            throw new IllegalStateException("EntityManager is not initialized");
+        }
         entityManager.persist(joueur);
         LOGGER.info("Joueur inscrit avec l'ID: {}", joueur.getId());
         return joueur;

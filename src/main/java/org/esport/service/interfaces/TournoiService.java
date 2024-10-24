@@ -20,5 +20,5 @@ public interface TournoiService {
 
     void retirerEquipe(Long tournoiId, Long equipeId);
 
-    int obtenirdureeEstimeeTournoi(Long tournoiId);
+    int calculerdureeEstimeeTournoi(Long tournoiId);
 }

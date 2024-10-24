@@ -7,10 +7,12 @@ import org.esport.model.Equipe;
 import org.esport.service.interfaces.TournoiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class TournoiServiceImpl implements TournoiService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TournoiServiceImpl.class);
@@ -76,7 +78,7 @@ public class TournoiServiceImpl implements TournoiService {
     }
 
     @Override
-    public int obtenirdureeEstimeeTournoi(Long tournoiId) {
+    public int calculerdureeEstimeeTournoi(Long tournoiId) {
         LOGGER.info("Calcul de la durée estimée pour le tournoi avec l'ID: {}", tournoiId);
         return tournoiDao.calculerdureeEstimeeTournoi(tournoiId);
     }

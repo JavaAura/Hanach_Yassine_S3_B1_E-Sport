@@ -1,10 +1,13 @@
 package org.esport.controller;
 
+import org.esport.model.Jeu;
 import org.esport.model.Tournoi;
 import org.esport.service.interfaces.TournoiService;
+import org.esport.service.interfaces.JeuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import java.util.Date;
 import java.util.List;
@@ -13,21 +16,39 @@ import java.util.Optional;
 public class TournoiController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TournoiController.class);
     private final TournoiService tournoiService;
+    private final JeuService jeuService;
 
-    public TournoiController(TournoiService tournoiService) {
+    public TournoiController(TournoiService tournoiService, JeuService jeuService) {
         this.tournoiService = tournoiService;
+        this.jeuService = jeuService;
     }
 
     public Tournoi creerTournoi(String titre, Long jeuId, LocalDate dateDebut, LocalDate dateFin,
-            int nombreSpectateurs) {
+            int nombreSpectateurs, int dureeMoyenneMatch, int tempsCeremonie, int tempsPauseEntreMatchs) {
         LOGGER.info("Tentative de création d'un nouveau tournoi: {}", titre);
         Tournoi tournoi = new Tournoi();
         tournoi.setTitre(titre);
-        // Vous devrez obtenir l'objet Jeu à partir du jeuId et le définir ici
+
+        Jeu jeu = jeuService.obtenirJeu(jeuId)
+                .orElseThrow(() -> new IllegalArgumentException("Jeu non trouvé pour l'ID: " + jeuId));
+        tournoi.setJeu(jeu);
+
         tournoi.setDateDebut(dateDebut);
         tournoi.setDateFin(dateFin);
         tournoi.setNombreSpectateurs(nombreSpectateurs);
-        return tournoiService.creerTournoi(tournoi);
+        tournoi.setDureeMoyenneMatch(dureeMoyenneMatch);
+        tournoi.setTempsCeremonie(tempsCeremonie);
+        tournoi.setTempsPauseEntreMatchs(tempsPauseEntreMatchs);
+
+        // Save the tournament first to get an ID
+        Tournoi savedTournoi = tournoiService.creerTournoi(tournoi);
+
+        // Calculate DUREEESTIMEE using the method from TournoiDaoExtension
+        int dureeEstimee = tournoiService.calculerdureeEstimeeTournoi(savedTournoi.getId());
+        savedTournoi.setDureeEstimee(dureeEstimee);
+
+        // Update the tournament with the calculated DUREEESTIMEE
+        return tournoiService.modifierTournoi(savedTournoi);
     }
 
     public Tournoi modifierTournoi(Long id, String nouveauTitre, LocalDate nouvelleDateDebut,
@@ -74,6 +95,18 @@ public class TournoiController {
 
     public int obtenirDureeEstimeeTournoi(Long tournoiId) {
         LOGGER.info("Tentative d'obtention de la durée estimée du tournoi avec l'ID: {}", tournoiId);
-        return tournoiService.obtenirdureeEstimeeTournoi(tournoiId);
+        return tournoiService.calculerdureeEstimeeTournoi(tournoiId);
+    }
+
+    private int calculateDureeEstimee(Tournoi tournoi) {
+        // Implement the calculation logic here
+        // This is a simplified example, adjust according to your specific requirements
+        int nombreJours = (int) ChronoUnit.DAYS.between(tournoi.getDateDebut(), tournoi.getDateFin()) + 1;
+        int nombreMatchsParJour = 8; // Assuming 8 matches per day, adjust as needed
+        int nombreTotalMatchs = nombreJours * nombreMatchsParJour;
+
+        return (tournoi.getDureeMoyenneMatch() * nombreTotalMatchs) +
+                (tournoi.getTempsPauseEntreMatchs() * (nombreTotalMatchs - 1)) +
+                tournoi.getTempsCeremonie();
     }
 }

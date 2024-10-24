@@ -44,8 +44,16 @@
     <!-- DAOs -->
     <bean id="joueurDao" class="org.esport.dao.impl.JoueurDaoImpl"/>
     <bean id="equipeDao" class="org.esport.dao.impl.EquipeDaoImpl"/>
-    <bean id="tournoiDao" class="org.esport.dao.impl.TournoiDaoImpl"/>
+    <bean id="tournoiDao" class="org.esport.dao.impl.TournoiDaoExtension">
+        <constructor-arg ref="tournoiDaoImpl"/>
+    </bean>
     <bean id="jeuDao" class="org.esport.dao.impl.JeuDaoImpl"/>
+
+    <bean id="tournoiDaoImpl" class="org.esport.dao.impl.TournoiDaoImpl"/>
+
+    <bean id="tournoiDaoExtension" class="org.esport.dao.impl.TournoiDaoExtension">
+        <constructor-arg ref="tournoiDaoImpl"/>
+    </bean>
 
     <!-- Services -->
     <bean id="joueurService" class="org.esport.service.impl.JoueurServiceImpl">
@@ -66,11 +74,11 @@
     <!-- Other beans remain the same -->
 
     <bean id="mainMenu" class="org.esport.presentation.menu.MainMenu">
-        <property name="joueurController" ref="joueurController"/>
-        <property name="equipeController" ref="equipeController"/>
-        <property name="tournoiController" ref="tournoiController"/>
-        <property name="jeuController" ref="jeuController"/>
-        <property name="consoleLogger" ref="consoleLogger"/>
+        <constructor-arg ref="joueurController"/>
+        <constructor-arg ref="equipeController"/>
+        <constructor-arg ref="tournoiController"/>
+        <constructor-arg ref="jeuController"/>
+        <constructor-arg ref="consoleLogger"/>
     </bean>
 
     <bean id="joueurController" class="org.esport.controller.JoueurController">

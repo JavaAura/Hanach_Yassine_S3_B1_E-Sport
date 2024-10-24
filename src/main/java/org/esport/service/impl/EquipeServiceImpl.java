@@ -7,6 +7,7 @@ import org.esport.model.Joueur;
 import org.esport.service.interfaces.EquipeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,18 +25,21 @@ public class EquipeServiceImpl implements EquipeService {
     }
 
     @Override
+    @Transactional
     public Equipe creerEquipe(Equipe equipe) {
         LOGGER.info("Création d'une nouvelle équipe");
         return equipeDao.creer(equipe);
     }
 
     @Override
+    @Transactional
     public Equipe modifierEquipe(Equipe equipe) {
         LOGGER.info("Modification de l'équipe avec l'ID: {}", equipe.getId());
         return equipeDao.modifier(equipe);
     }
 
     @Override
+    @Transactional
     public void supprimerEquipe(Long id) {
         LOGGER.info("Suppression de l'équipe avec l'ID: {}", id);
         equipeDao.supprimer(id);
@@ -54,17 +58,24 @@ public class EquipeServiceImpl implements EquipeService {
     }
 
     @Override
+    @Transactional
     public void ajouterJoueur(Long equipeId, Long joueurId) {
         LOGGER.info("Ajout du joueur {} à l'équipe {}", joueurId, equipeId);
-        Optional<Joueur> joueur = joueurDao.trouverParId(joueurId);
-        if (joueur.isPresent()) {
-            equipeDao.ajouterJoueur(equipeId, joueur.get());
+        Optional<Equipe> equipeOptional = equipeDao.trouverParId(equipeId);
+        Optional<Joueur> joueurOptional = joueurDao.trouverParId(joueurId);
+        if (equipeOptional.isPresent() && joueurOptional.isPresent()) {
+            Equipe equipe = equipeOptional.get();
+            Joueur joueur = joueurOptional.get();
+            equipe.getJoueurs().add(joueur);
+            joueur.setEquipe(equipe);
+            equipeDao.modifier(equipe);
         } else {
-            LOGGER.warn("Joueur avec l'ID {} non trouvé", joueurId);
+            LOGGER.warn("Équipe avec l'ID {} ou Joueur avec l'ID {} non trouvé", equipeId, joueurId);
         }
     }
 
     @Override
+    @Transactional
     public void retirerJoueur(Long equipeId, Long joueurId) {
         LOGGER.info("Retrait du joueur {} de l'équipe {}", joueurId, equipeId);
         Optional<Joueur> joueur = joueurDao.trouverParId(joueurId);

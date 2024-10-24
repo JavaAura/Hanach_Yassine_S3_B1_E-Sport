@@ -19,7 +19,7 @@ public class Equipe {
     @Column(unique = true)
     private String nom;
 
-    @OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "equipe")
     private List<Joueur> joueurs = new ArrayList<>();
 
     @ManyToMany(mappedBy = "equipes")

@@ -91,11 +91,10 @@ public class TournoiDaoImpl implements TournoiDao {
             int tempsPauseEntreMatchs = tournoi.getTempsPauseEntreMatchs();
 
             int dureeEstimee = (nombreEquipes * dureeMoyenneMatch) + tempsPauseEntreMatchs;
-            LOGGER.info("Durée estimée calculée pour le tournoi avec l'ID {}: {} minutes", tournoiId, dureeEstimee);
+            tournoi.setDureeEstimee(dureeEstimee);
+            entityManager.merge(tournoi);
             return dureeEstimee;
-        } else {
-            LOGGER.warn("Tentative de calcul de la durée estimée pour un tournoi inexistant avec l'ID: {}", tournoiId);
-            return 0;
         }
+        return 0;
     }
 }

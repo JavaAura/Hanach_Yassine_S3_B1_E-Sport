@@ -22,8 +22,8 @@ public class Tournoi {
     @Size(min = 2, max = 100)
     private String titre;
 
-    @ManyToOne
-    @JoinColumn(name = "jeu_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "jeu_id", nullable = false)
     private Jeu jeu;
 
     @NotNull
@@ -39,32 +39,32 @@ public class Tournoi {
     @JoinTable(name = "tournoi_equipe", joinColumns = @JoinColumn(name = "tournoi_id"), inverseJoinColumns = @JoinColumn(name = "equipe_id"))
     private List<Equipe> equipes = new ArrayList<>();
 
-    @Min(value = 0)
-    private int dureeEstimee;
+    @Column(nullable = false)
+    private int dureeEstimee = 0;
 
-    @Min(value = 0)
-    private int tempsPauseEntreMatchs;
-
-    @Min(value = 0)
-    private int tempsCeremonie;
+    @Column(nullable = false)
+    private int dureeMoyenneMatch = 0;
 
     @Enumerated(EnumType.STRING)
-    private TournoiStatus statut;
+    @Column(nullable = false)
+    private TournoiStatus statut = TournoiStatus.PLANIFIE;
 
-    private int dureeMoyenneMatch;
+    @Column(nullable = false)
+    private int tempsCeremonie = 0;
 
-    @OneToMany(mappedBy = "jeu")
-    private List<Tournoi> tournois = new ArrayList<>();
+    @Column(nullable = false)
+    private int tempsPauseEntreMatchs = 0;
 
     // Constructors
     public Tournoi() {
     }
 
-    public Tournoi(String titre, Jeu jeu, LocalDate dateDebut, LocalDate dateFin) {
+    public Tournoi(String titre, Jeu jeu, LocalDate dateDebut, LocalDate dateFin, int dureeMoyenneMatch) {
         this.titre = titre;
         this.jeu = jeu;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
+        this.dureeMoyenneMatch = dureeMoyenneMatch;
         this.statut = TournoiStatus.PLANIFIE;
     }
 
@@ -158,8 +158,18 @@ public class Tournoi {
     }
 
     public int calculateEstimatedDuration() {
-        int baseEstimation = (equipes.size() * jeu.getDureeMoyenneMatch()) + tempsPauseEntreMatchs;
-        return baseEstimation + tempsCeremonie;
+        int nombreEquipes = this.equipes.size();
+        int difficulteJeu = this.jeu.getDifficulte();
+        int baseEstimation = (nombreEquipes * this.dureeMoyenneMatch * difficulteJeu) + this.tempsPauseEntreMatchs;
+        return baseEstimation + this.tempsCeremonie;
+    }
+
+    public int getDureeMoyenneMatch() {
+        return dureeMoyenneMatch;
+    }
+
+    public void setDureeMoyenneMatch(int dureeMoyenneMatch) {
+        this.dureeMoyenneMatch = dureeMoyenneMatch;
     }
 
 }

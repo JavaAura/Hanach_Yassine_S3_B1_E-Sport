@@ -2,7 +2,7 @@
 
 ## Description du Projet
 
-Ce projet est une application de gestion pour organiser et suivre des tournois de jeux vidéo e-sport. Elle permet de gérer les joueurs, les équipes et les tournois.
+Ce projet est une application de gestion pour organiser et suivre des tournois de jeux vidéo e-sport. Elle permet de gérer les joueurs, les équipes, les tournois et les jeux.
 
 ## Fonctionnalités Principales
 
@@ -23,6 +23,7 @@ Ce projet est une application de gestion pour organiser et suivre des tournois d
    - Ajout et retrait d'équipes dans un tournoi
    - Affichage des informations d'un tournoi ou de tous les tournois
    - Calcul de la durée estimée d'un tournoi
+   - Modification du statut d'un tournoi (PLANIFIE, EN_COURS, TERMINE, ANNULE)
 
 4. Gestion des Jeux
    - Création, modification et suppression de jeux
@@ -33,7 +34,7 @@ Ce projet est une application de gestion pour organiser et suivre des tournois d
 ### Utilisation du fichier JAR
 
 1. Assurez-vous d'avoir Java 8 ou une version supérieure installée sur votre machine.
-2. Téléchargez le fichier `Naoufal_Labrihmi_S3_B1_E-Sport-1.0-SNAPSHOT.jar` depuis le dépôt.
+2. Téléchargez le fichier `Naoufal_Labrihmi_S3_B1_E-Sport-1.0-SNAPSHOT.jar` depuis le dossier `@src` du dépôt.
 3. Ouvrez un terminal et naviguez jusqu'au dossier contenant le fichier JAR.
 4. Exécutez la commande suivante :
    ```
@@ -68,6 +69,8 @@ Le projet suit une architecture en couches :
 - Service : Logique métier
 - Présentation : Interface console pour interagir avec l'application
 
+Le projet implémente le principe Open/Closed, notamment avec la classe `TournoiDaoExtension` qui étend les fonctionnalités de `TournoiDaoImpl` sans modifier son code source.
+
 ## Technologies Utilisées
 
 - Java 8
@@ -85,7 +88,7 @@ Le projet suit une architecture en couches :
 
 ## Diagramme UML
 
-Le diagramme UML du projet est disponible dans le fichier `UML.mdj` à la racine du projet.
+Le diagramme UML du projet est disponible dans le fichier `UML.mdj` dans le dossier `@src` du projet.
 
 ## Auteur
 

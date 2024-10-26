@@ -45,7 +45,6 @@ public class TournoiServiceImpl implements TournoiService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Tournoi> obtenirTournoi(Long id) {
         LOGGER.info("Recherche du tournoi avec l'ID: {}", id);
         return tournoiDao.trouverParIdAvecEquipes(id);
